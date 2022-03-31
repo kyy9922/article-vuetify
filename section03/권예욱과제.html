@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="title">
+        <p><textarea type="text" rows="5" cols="25" v-model="memo"></textarea>
+        <button @click="addMemo">추가</button></p>
+        
+        <memo-comp v-for="a in memolist" :key="a" v-bind:id="a.id" 
+        @delete="deleteMemo">
+            <template v-slot:title><span class="title">{{a.title}}</span></template>
+            <template v-slot:memo><span class="memo">{{a.memo}}</span></template>
+        {{a.memo}}
+        </memo-comp>        
+    </div>
+
+
+
+    <script src="./components/memoComp.js"></script>
+
+    <script>
+        new Vue ({
+            el : '#app',
+            data : {
+                id : 0,
+                title :'',
+                memo :'',
+                memolist : []
+            },
+            methods : {
+                addMemo : function(){
+                    this.memolist.push(
+                        { 
+                            id : this.id,
+                            memo : this.memo,
+                            title : this.title
+                        }
+                    );
+                    this.id++;
+                    this.memo='';
+                    this.title='';
+                },
+                deleteMemo : function(id){
+                    let index = 0;
+                    this.memolist.forEach ((element, i)=> {
+                        if(element.id == id){
+                            index = i;
+                        }
+                    });
+                    this.memolist.splice(index, 1);
+                }
+            }
+        })
+
+    </script>
+</body>
+</html>

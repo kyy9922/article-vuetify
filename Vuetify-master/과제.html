@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div id="app">
+        <v-app id="inspire">
+            <v-card class="mx-auto overflow-hidden" height="100%" width="100%">
+                <v-app-bar color="#1976D2" dark>
+                    <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+                    <v-toolbar-title>부산 관광 안내</v-toolbar-title>
+                </v-app-bar>
+
+                <v-navigation-drawer v-model="drawer" absolute temporary>
+                    <v-list nav dense>
+                        <v-list-item style="border-bottom:1px solid #ccc">
+                            <v-list-item-avatar color="#9E9E9E">
+                                <v-list-item-icon->
+                                    <v-icon> mdi-account</v-icon>
+                                </v-list-item-icon->
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                                <v-list-item-title>즐거운 부산</v-list-item-title>
+                                <v-list-item-subtitle>다이나믹 부산</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+
+                        <v-list-item-group v-for="list in navlist" :key="list" v-model="group"
+                            active-class="deep-purple--text text--accent-4">
+                            <v-list-item>
+                                <v-list-item-icon>
+                                    <v-icon>{{list.icon}}</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>{{list.title}}</v-list-item-title>
+                            </v-list-item>
+                        </v-list-item-group>
+                    </v-list>
+                </v-navigation-drawer>
+
+                <div class="container">
+                    <h1 class="display mt-5 d-flex justify-center">현재 인기있는 곳입니다</h1>
+                    <p class="d-flex justify-center"> 추천을 통해 인기있는 곳을 골라주세요</p>
+                    <div class="row">
+                        <div class="col-sm-6 col-12" v-for="card in cardList" :key="card" >
+                            <v-card class="v-card v-sheet mx-auto up">
+                                <v-img class="white--text align-end" height="300px" :src="card.image">
+                                </v-img>                                
+                                <v-card-title>{{card.title}}</v-card-title>
+                                <count-comp v-bind="cardList"/>
+                            </v-card>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container">      
+                    <v-card class="pa-5">
+                        <p v-for="n in cardList">{{n.title}}추천합니다</p>
+                    </v-card>
+                </div>
+
+
+
+            </v-card>
+        </v-app>
+    </div>
+
+
+    <script>
+        Vue.component('count-comp',{            
+            template : `
+            <v-card-actions style="display:flex !important;align-items: center;
+            justify-content: space-between;">
+                <h3 class="count">{{count}}</h3>
+                <v-btn @click="addCount" color="#BF360C" dark>추천</v-btn>
+            </v-card-actions>
+            
+            `,
+            data : function(){
+                return{
+                    count : 0,
+                }                
+            },
+            methods : {
+                addCount : function(index){
+                    this.count++
+                    EventBus.$emit('add')
+                },                
+            },      
+                
+        }),
+
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            data: () => ({
+                
+                count : 0,
+                navlist : [
+                    {
+                        title: '메인페이지',
+                        icon: 'mdi-card-bulleted-outline',
+                        link: '#'
+                    },
+                    {
+                        title: '관광지소개',
+                        icon: 'mdi-content-paste',
+                        link: '#'
+                    },
+                    {
+                        title: '추천명소',
+                        icon: 'mdi-check',
+                        link: '#'
+                    },
+                ],
+                cardList: [
+                    {
+                        title: '해운대',
+                        image: 'https://hj-seong.github.io/Vuetify-Test/img/1.jpg',
+                        id : 0,
+                    },
+                    {
+                        title: '바다 도시 야경',
+                        image: 'https://hj-seong.github.io/Vuetify-Test/img/2.jpg',
+                        id : 1,
+                    },
+                    {
+                        title: '광안대교',
+                        image: 'https://hj-seong.github.io/Vuetify-Test/img/3.jpg',
+                        id : 2,
+                    },
+                    {
+                        title: '해운대 인어동상',
+                        image: 'https://hj-seong.github.io/Vuetify-Test/img/4.jpg',
+                        id : 3,
+                    },
+                ],
+                drawer: false,
+                group: null,
+            }),                       
+        })
+    </script>
+</body>
+
+</html>

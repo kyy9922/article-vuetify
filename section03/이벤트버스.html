@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+</head>
+<body>
+
+    <div id="app">
+        
+        <news-component></news-component>
+        <cancle-component></cancle-component>
+        <person-component></person-component>
+        
+
+        <!-- 라이프 사이클을 확인하기위한 버튼 -->
+        <button @click="count +=1"> {{count}} </button>
+        <button @click="count -=1"> {{count}} </button>
+        
+        <!-- 라이프 사이클을 확인하기위한 li요소 -->
+        <ul>
+            <li v-for="n in count">asdasd</li>
+        </ul>
+    </div>
+
+    <script>
+        const EventBus = new Vue()
+
+
+        Vue.component('cancle-component',{
+            template :
+            `<div>
+                <button @click="subCount">뉴스구독취소 : {{count}}</button>
+            </div>`,
+            data : function() {
+                return {
+                    count : 0
+                }
+            },
+            methods : {
+                subCount : function() {
+                    this.count++;
+                    EventBus.$emit("sub");
+                }
+            }
+        })
+
+        Vue.component('person-component',{
+            template : 
+            `<div>
+                <p>구독자 확인 : {{count}}</p>
+            </div>
+            `,
+            data : function() {
+                return {
+                    count : 0,
+                }
+            },
+            // 자바스크립트에서 값이 변경될때마다
+            created () {
+                EventBus.$on('add', ()=> {
+                    this.count++;
+                });
+                EventBus.$on('sub', ()=>{
+                    this.count--;
+                });
+                console.log("created");
+            },
+            mounted () {
+                console.log("mounted");
+
+            }
+        })
+
+
+        Vue.component('news-component', {
+            template : 
+            `<div> 
+                <button @click="addCount"> 신문발행 : {{count}} </button>
+            </div>`,
+            data : function () {
+                return {
+                    count : 0,
+                }
+            },
+            methods : {
+                addCount : function () {
+                    this.count++;
+                    //구독자에게 보낼 사용자 정의 이벤트 생성 필요
+                    EventBus.$emit('add');
+                }
+            }
+        })
+
+        new Vue({
+            el: '#app',
+            data : {
+                count : 0
+            },
+            created () {
+                console.log("created");
+            },
+            mounted () {
+                console.log("mounted");
+
+            },
+            updated () {
+                console.log("update");
+            },
+            destroyed () {
+                console.log("destroyed");
+
+            }
+        })
+
+    </script>
+</body>
+</html>

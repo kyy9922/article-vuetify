@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+
+    <div id="app">
+        <p>{{count}}</p>
+        <counter-comp v-on:counter="receiveCount"></counter-comp>
+        
+    </div>
+
+    <script>
+
+        Vue.component('counter-comp', {
+            template : `
+            <div>
+                <button v-on:click="count += 1">{{count}}</button>
+                <button v-on:click="sendCount">부모로 값을 전달</button>
+            </div>
+            `,
+            data : function(){
+                return {
+                    count : 0,
+                };
+            },
+            methods : {
+                sendCount : function(){
+                    this.$emit('counter', this.count)
+                }
+            }
+        })
+
+        new Vue({
+            el : '#app',
+            data : {
+                count : 0,
+            },
+            methods :{
+                receiveCount:function(msg){
+                    this.count = msg;
+                }
+            }
+        })
+
+    </script>
+</body>
+</html>
